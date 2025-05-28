@@ -9,15 +9,12 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- ビデオ表示エリア -->
-        <Border Grid.Row="0" Background="Black" Margin="10">
-            <Grid x:Name="VideoPanel" Background="Black"/>
-        </Border>
+        <!-- 映像描画エリア -->
+        <Image x:Name="VideoImage" Grid.Row="0" Stretch="Uniform" Margin="10"/>
 
-        <!-- コントロールパネル -->
+        <!-- コントロール -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-            <Button x:Name="StartButton" Content="開始" Width="100" Height="30" 
-                    Click="StartStreaming_Click" Margin="5"/>
+            <Button x:Name="StartButton" Content="開始" Width="100" Height="30" Click="StartStreaming_Click" Margin="5"/>
         </StackPanel>
 
         <!-- ステータスバー -->
