@@ -16,6 +16,8 @@ namespace WpfGStreamerPlayer
         private WriteableBitmap writeableBitmap;
         private int width = 1280;
         private int height = 720;
+        private bool stopRequested = false;
+
 
         public MainWindow()
         {
@@ -67,10 +69,12 @@ namespace WpfGStreamerPlayer
 
         private void StopGStreamerPipeline()
         {
+            stopRequested = true;
+
             if (videoThread != null && videoThread.IsAlive)
             {
-                videoThread.Abort();
-                videoThread.Join();
+                videoThread.Join(); // threadが終了するまで待つ
+                videoThread = null;
             }
 
             if (pipeline != IntPtr.Zero)
@@ -89,9 +93,10 @@ namespace WpfGStreamerPlayer
             StatusLabel.Content = "停止中";
         }
 
+
         private void VideoLoop()
         {
-            while (true)
+            while (!stopRequested)
             {
                 IntPtr sample = GStreamer.gst_app_sink_pull_sample(appsink);
                 if (sample == IntPtr.Zero) continue;
@@ -110,11 +115,11 @@ namespace WpfGStreamerPlayer
                     writeableBitmap.Unlock();
                 });
 
-
                 GStreamer.gst_buffer_unmap(buffer, ref map);
                 GStreamer.gst_sample_unref(sample);
             }
         }
+
 
         protected override void OnClosed(EventArgs e)
         {
